@@ -1,0 +1,42 @@
+version: '3'
+services:
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - 15672:15672
+    networks:
+      - internal
+
+  generator:
+    container_name: generator
+    build:
+      context: generator
+      dockerfile: Dockerfile
+    volumes:
+      - ./generator/.logs:/var/log/:z
+    networks:
+      - internal
+
+  compute:
+    container_name: compute
+    build:
+      context: compute
+      dockerfile: Dockerfile
+    volumes:
+      - ./compute/.logs:/var/log/:z
+    networks:
+      - internal
+
+  sorter:
+    build:
+      context: sorter
+      dockerfile: Dockerfile
+    volumes:
+      - ./sorter/.logs:/var/log/:z
+    networks:
+      - internal
+
+networks:
+  internal: 
+    driver: bridge
