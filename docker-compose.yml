@@ -8,13 +8,13 @@ services:
     networks:
       - internal
 
-  generator:
-    container_name: generator
+  scanner:
+    container_name: scanner
     build:
-      context: generator
+      context: scanner
       dockerfile: Dockerfile
     volumes:
-      - ./generator/.logs:/var/log/:z
+      - ./scanner/.logs:/var/log/:z
     networks:
       - internal
 
