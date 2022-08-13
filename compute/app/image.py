@@ -1,13 +1,16 @@
 import base64
 import io
-import random
 
-from PIL import Image as PImage
+from PIL import Image as PImage, UnidentifiedImageError
 from numpy import asarray, mean
 
 from app import get_logger
 
 log = get_logger(__name__)
+
+
+class ImageError(Exception):
+    pass
 
 
 class Image:
@@ -17,16 +20,22 @@ class Image:
 
     @staticmethod
     def rgb_to_hex(rgb: list) -> str:
-        if len(rgb) != 3:
-            raise ValueError(f"Invalid RGB input: {rgb}, expected 3 items")
-        try:
-            rgb = [round(item) for item in rgb]
-        except ValueError as e:
-            raise ValueError(f"Invalid RGB input: {rgb}", e)
+        def parse_number(item):
+            number = round(float(item))
+            if number < 0:
+                return 0
+            if number > 255:
+                return 255
+            return number
 
-        return '#' + ''.join([
-            '{:02x}'.format(item) if item < 255 else 255 for item in rgb
-        ])
+        try:
+            if len(rgb) != 3:
+                raise ImageError(f"Invalid RGB input: {rgb}, expected 3 items")
+            rgb = [parse_number(item) for item in rgb]
+        except (ValueError, TypeError) as e:
+            raise ImageError(f"Invalid RGB input: {rgb}", e)
+
+        return '#' + ''.join(['{:02x}'.format(item) for item in rgb])
 
     @classmethod
     def from_b64(cls, b64_string: str):
@@ -38,7 +47,11 @@ class Image:
 
     def get_average_rgb(self):
         stream = io.BytesIO(self.image_data)
-        image = PImage.open(stream)
+        try:
+            image = PImage.open(stream)
+        except UnidentifiedImageError as e:
+            raise ImageError("Invalid image data", e)
+
         log.debug(f"'{image.format}' image loaded: {image.height}x{image.width}")
 
         result = mean(asarray(image), axis=(0, 1))

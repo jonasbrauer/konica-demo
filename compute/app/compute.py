@@ -66,7 +66,8 @@ class Compute:
             routing_key=routing_key,
             body=json.dumps({
                 'id': image_uuid,
-                'image': image.to_b64_string()
+                'image': image.to_b64_string(),
+                'rgb': computed_average_color
             }).encode()
         )
         logger.info(
