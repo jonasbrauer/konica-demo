@@ -1,5 +1,5 @@
 import pytest
-from src.scanner import Scanner
+from app.scanner import Scanner
 
 
 class TestConfig:

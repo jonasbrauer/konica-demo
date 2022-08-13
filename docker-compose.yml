@@ -13,8 +13,15 @@ services:
     build:
       context: scanner
       dockerfile: Dockerfile
+    environment:
+      - LOG_FILE=/var/log/scanner.log
+      - LOG_LEVEL=DEBUG
+      - BROKER_HOST=rabbitmq
+      - SCAN_DIRS=/var/image_data
+      - OUTPUT_EXCHANGE=to_be_processed
     volumes:
       - ./scanner/.logs:/var/log/:z
+      - ./scanner/data:/var/image_data/:z
     networks:
       - internal
 
@@ -23,8 +30,15 @@ services:
     build:
       context: compute
       dockerfile: Dockerfile
+    environment:
+      - LOG_FILE=/var/log/compute.log
+      - LOG_LEVEL=DEBUG
+      - BROKER_HOST=rabbitmq
+      - INPUT_EXCHANGE=to_be_processed
+      - OUTPUT_EXCHANGE=processed
     volumes:
       - ./compute/.logs:/var/log/:z
+      - ./compute/data:/var/image_data/:z
     networks:
       - internal
 
