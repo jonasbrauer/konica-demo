@@ -7,18 +7,19 @@ Generator component of the sorting system
 Modify behavior using these environment variables:
 * LOG_LEVEL
 * LOG_FILE
-* LOG_LEVEL
-* LOG_LEVEL
+* WATCH_DIR: directory to be periodically scanned for new images
+* SCAN_INTERVAL_SECS (defaults to 5)
+* BROKER_HOST
+* BROKER_PORT (defaults to 5672)
+* OUTPUT_EXCHANGE: where to send the computation results
+* OUTPUT_ROUTING_KEY: (defaults to 'compute')
 
 """
-import logging
-
+from app import get_logger
 from app.scanner import Scanner
 
-# logging.basicConfig(level=logging.DEBUG)
-log = logging.getLogger(__name__)
-handler = logging.FileHandler('/var/log/main.log', mode="w")
-log.addHandler(handler)
+
+log = get_logger("MAIN")
 
 
 if __name__ == "__main__":
@@ -26,5 +27,5 @@ if __name__ == "__main__":
         scanner = Scanner()
         scanner.start_scanning()
     except Exception as e:
-        log.error("main failed", exc_info=e)
+        log.error("Unexpected error", exc_info=e)
         raise
