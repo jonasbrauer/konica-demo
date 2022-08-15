@@ -1,3 +1,5 @@
+import os
+
 import pytest
 
 from app.image import Image, ImageError
@@ -25,8 +27,8 @@ def test_rgb_to_hex_invalid(rgb):
 
 
 @pytest.fixture
-def invalid_image():
-    with open("./test_data/invalid.jpg", "rb") as img:
+def invalid_image(test_data_dir):
+    with open(os.path.join(test_data_dir, "invalid.jpg"), "rb") as img:
         image_bytes = img.read()
     return image_bytes
 

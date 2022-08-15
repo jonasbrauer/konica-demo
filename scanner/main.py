@@ -15,6 +15,9 @@ Modify behavior using these environment variables:
 * OUTPUT_ROUTING_KEY: (defaults to 'compute')
 
 """
+import os
+import time
+
 from app import get_logger
 from app.scanner import Scanner
 
@@ -22,10 +25,19 @@ from app.scanner import Scanner
 log = get_logger("MAIN")
 
 
+def main():
+    log.info("""
+░▒█▀▀▀█░▒█▀▀▄░█▀▀▄░▒█▄░▒█░▒█▄░▒█░▒█▀▀▀░▒█▀▀▄
+░░▀▀▀▄▄░▒█░░░▒█▄▄█░▒█▒█▒█░▒█▒█▒█░▒█▀▀▀░▒█▄▄▀
+░▒█▄▄▄█░▒█▄▄▀▒█░▒█░▒█░░▀█░▒█░░▀█░▒█▄▄▄░▒█░▒█""")
+    while True:
+        try:
+            scanner = Scanner()
+            scanner.start_scanning()
+        except Exception as e:
+            log.error("Unexpected error", exc_info=e)
+            time.sleep(10)
+
+
 if __name__ == "__main__":
-    try:
-        scanner = Scanner()
-        scanner.start_scanning()
-    except Exception as e:
-        log.error("Unexpected error", exc_info=e)
-        raise
+    main()

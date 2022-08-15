@@ -7,7 +7,8 @@ import pytest
 
 from app.scanner import Scanner
 
-TEST_DATA_PATH = "./test_data"
+
+TEST_DATA_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), "test_data")
 
 
 @pytest.fixture(autouse=True)
@@ -47,9 +48,13 @@ def test_scanner(mock_connection, test_dir):
     thread.join()
 
     assert scanner.publish_image.call_count == len(test_dir)
-    scanner.publish_image.assert_called_with(
-        os.path.join(TEST_DATA_PATH, test_dir[-1])
-    )
+    calls = scanner.publish_image.call_args_list
+    assert len(calls) == len(test_dir)
+    for call in calls:
+        assert len(call.args) == 1, "Publish_image called with more than 1 arg."
+
+    called_args = {call.args[0].split("/")[-1] for call in calls}
+    assert called_args == set(test_dir)
 
 
 def test_scanner_publish(test_dir):
