@@ -35,18 +35,18 @@ def compute_average_color(image_data):
 
 
 def main():
-    log.info("===============")
-    log.info("COMPUTE STARTED")
-    log.info("===============\n")
-
-    compute = Compute()
-    compute.start_listening()
+    log.info("""
+░▒█▀▀▄░▒█▀▀▀█░▒█▀▄▀█░▒█▀▀█░▒█░▒█░▀▀█▀▀░▒█▀▀▀
+░▒█░░░░▒█░░▒█░▒█▒█▒█░▒█▄▄█░▒█░▒█░░▒█░░░▒█▀▀▀
+░▒█▄▄▀░▒█▄▄▄█░▒█░░▒█░▒█░░░░░▀▄▄▀░░▒█░░░▒█▄▄▄""")
+    while True:
+        try:
+            compute = Compute()
+            compute.start_listening()
+        except Exception as e:
+            log.error("Unexpected error", exc_info=e)
+            time.sleep(10)
 
 
 if __name__ == "__main__":
-    while True:
-        try:
-            main()
-        except Exception as e:
-            log.error("Unexpected error", exc_info=e)
-            time.sleep(5)
+    main()

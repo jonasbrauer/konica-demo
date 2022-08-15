@@ -46,12 +46,6 @@ class Scanner:
         )
         try:
             yield connection
-        except Exception as exc_info:
-            raise ScannerError(
-                f"Unexpected error with opened"
-                f"connection (host={self.broker_host}, port={self.broker_port})",
-                exc_info
-            )
         finally:
             connection.close()
 
@@ -59,15 +53,7 @@ class Scanner:
         # TODO: scan recursively
         files = {os.path.join(directory, file) for file in os.listdir(directory)}
         files = {file for file in files if os.path.isfile(file)}
-
-        log.info(f"Scanning {directory}...")
-        new_files = files.difference(self.published_images)
-        if new_files:
-            log.info(f"Found new image files: {new_files}")
-        else:
-            log.info("No new images.")
-
-        return new_files
+        return files.difference(self.published_images)
 
     def publish_image(self, image_path: str) -> None:
         image_id = generate_uuid()
@@ -98,9 +84,18 @@ class Scanner:
 
         # 2) Start the loop
         log.info("Scanning loop started. To exit press CTRL+C")
+        no_new_images_msg_displayed = False
         while True:
             # TODO: scan more than 1 directory
             new_images = self.scan(self.watch_dir)
+
+            if new_images:
+                log.info(f"New images found: {new_images}")
+                no_new_images_msg_displayed = False
+            elif not no_new_images_msg_displayed:
+                log.info(f"No new images ({self.watch_dir})")
+                no_new_images_msg_displayed = True
+
             for image in new_images:
                 self.publish_image(image)
 

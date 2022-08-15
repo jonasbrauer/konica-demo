@@ -5,23 +5,7 @@ services:
     image: rabbitmq:3-management
     ports:
       - 15672:15672
-    networks:
-      - internal
-
-  scanner:
-    container_name: scanner
-    build:
-      context: scanner
-      dockerfile: Dockerfile
-    environment:
-      - LOG_FILE=/var/log/scanner.log
-      - LOG_LEVEL=DEBUG
-      - BROKER_HOST=rabbitmq
-      - WATCH_DIR=/var/image_data
-      - OUTPUT_EXCHANGE=to_be_processed
-    volumes:
-      - ./scanner/.logs:/var/log/:z
-      - ./scanner/tests/test_data:/var/image_data/:z
+      - 5672:5672
     networks:
       - internal
 
@@ -37,7 +21,7 @@ services:
       - INPUT_EXCHANGE=to_be_processed
       - OUTPUT_EXCHANGE=processed
     volumes:
-      - ./compute/.logs:/var/log/:z
+      - .logs:/var/log/:z
       - ./compute/data:/var/image_data/:z
     networks:
       - internal
@@ -46,8 +30,36 @@ services:
     build:
       context: sorter
       dockerfile: Dockerfile
+    restart: always
+    environment:
+      - LOG_FILE=/var/log/sorter.log
+      - LOG_LEVEL=DEBUG
+      - BROKER_HOST=rabbitmq
+      - TARGET_DIR=/var/image_data
+      - INPUT_EXCHANGE=processed
     volumes:
-      - ./sorter/.logs:/var/log/:z
+      - .logs:/var/log/:z
+      - ./data/output:/var/image_data:z
+    networks:
+      - internal
+    
+  scanner:
+    container_name: scanner
+    depends_on:
+      - compute
+      - sorter
+    build:
+      context: scanner
+      dockerfile: Dockerfile
+    environment:
+      - LOG_FILE=/var/log/scanner.log
+      - LOG_LEVEL=INFO
+      - BROKER_HOST=rabbitmq
+      - WATCH_DIR=/var/image_data
+      - OUTPUT_EXCHANGE=to_be_processed
+    volumes:
+      - .logs:/var/log/:z
+      - ./data/input:/var/image_data/:z
     networks:
       - internal
 

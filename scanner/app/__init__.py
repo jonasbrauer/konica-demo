@@ -4,6 +4,12 @@ import sys
 import uuid
 
 
+# clear the log file on startup
+if os.environ.get("LOG_FILE"):
+    with open(os.environ.get("LOG_FILE"), "w"):
+        pass
+
+
 def get_logger(name: str):
     log_level = os.environ.get('LOG_LEVEL') or logging.INFO
     log_file = os.environ.get('LOG_FILE')
