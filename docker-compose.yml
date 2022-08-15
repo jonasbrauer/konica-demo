@@ -16,7 +16,7 @@ services:
       dockerfile: Dockerfile
     environment:
       - LOG_FILE=/var/log/compute.log
-      - LOG_LEVEL=DEBUG
+      - LOG_LEVEL=INFO
       - BROKER_HOST=rabbitmq
       - INPUT_EXCHANGE=to_be_processed
       - OUTPUT_EXCHANGE=processed
@@ -33,7 +33,7 @@ services:
     restart: always
     environment:
       - LOG_FILE=/var/log/sorter.log
-      - LOG_LEVEL=DEBUG
+      - LOG_LEVEL=INFO
       - BROKER_HOST=rabbitmq
       - TARGET_DIR=/var/image_data
       - INPUT_EXCHANGE=processed
