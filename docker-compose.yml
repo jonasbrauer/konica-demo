@@ -8,13 +8,20 @@ services:
     networks:
       - internal
 
-  generator:
-    container_name: generator
+  scanner:
+    container_name: scanner
     build:
-      context: generator
+      context: scanner
       dockerfile: Dockerfile
+    environment:
+      - LOG_FILE=/var/log/scanner.log
+      - LOG_LEVEL=DEBUG
+      - BROKER_HOST=rabbitmq
+      - WATCH_DIR=/var/image_data
+      - OUTPUT_EXCHANGE=to_be_processed
     volumes:
-      - ./generator/.logs:/var/log/:z
+      - ./scanner/.logs:/var/log/:z
+      - ./scanner/tests/test_data:/var/image_data/:z
     networks:
       - internal
 
@@ -23,8 +30,15 @@ services:
     build:
       context: compute
       dockerfile: Dockerfile
+    environment:
+      - LOG_FILE=/var/log/compute.log
+      - LOG_LEVEL=DEBUG
+      - BROKER_HOST=rabbitmq
+      - INPUT_EXCHANGE=to_be_processed
+      - OUTPUT_EXCHANGE=processed
     volumes:
       - ./compute/.logs:/var/log/:z
+      - ./compute/data:/var/image_data/:z
     networks:
       - internal
 
