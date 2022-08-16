@@ -9,6 +9,4 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-RUN rm -rf /var/log/compute.log
-
 CMD [ "python", "./main.py"]
