@@ -15,12 +15,10 @@ Modify behavior using these environment variables:
 * OUTPUT_ROUTING_KEY: (defaults to 'compute')
 
 """
-import os
 import time
 
 from app import get_logger
 from app.scanner import Scanner
-
 
 log = get_logger("MAIN")
 

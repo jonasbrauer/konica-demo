@@ -16,22 +16,12 @@ Modify behavior using these environment variables:
 * OUTPUT_ROUTING_KEY: (defaults to 'computed')
 
 """
-import random
 import time
 
 from app import get_logger
 from app.compute import Compute
 
 log = get_logger('MAIN')
-
-
-def compute_average_color(image_data):
-    log.debug(f"Processing image: {image_data}")
-    time.sleep(3)
-    colors = ['#2b2b2b', "#9e2927", "#549453", "#ffffff", "#0994c4"]
-    random.shuffle(colors)
-    log.debug(f"Image processed, average color: {colors[0]}")
-    return colors[0]
 
 
 def main():
