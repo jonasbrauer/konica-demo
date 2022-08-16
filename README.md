@@ -27,4 +27,6 @@ Services log both to *sys.out* and to individual *log files* (configurable). By 
 ## Web GUI
 The system can be accessed via a simple Flask/templates web graphical interface.
 
+With the default docker-compose.yml, web UI can be accessed at ```http://localhost:8080```.
+
 ![image](https://user-images.githubusercontent.com/10963153/184909818-eda53c2c-647b-42d9-92f3-0512099edd49.png)
