@@ -11,13 +11,13 @@ from app.image import Image, ImageError
     ([159, 201, 126], "#9fc97e"),
     (["159", "201", "126"], "#9fc97e"),
     ([158.89, 201., 126.49], "#9fc97e"),
+    ([158.89, 201., 126.49, 255], "#9fc97eff"),
 ])
 def test_rgb_to_hex(rgb, expected):
     assert Image.rgb_to_hex(rgb) == expected
 
 
 @pytest.mark.parametrize('rgb', [
-    [86, 84, 86, 12],
     "just a string",
     [158, 84, "string"],
 ])

@@ -29,8 +29,8 @@ class Image:
             return number
 
         try:
-            if len(rgb) != 3:
-                raise ImageError(f"Invalid RGB input: {rgb}, expected 3 items")
+            if len(rgb) not in (3, 4):
+                raise ImageError(f"Invalid RGB(A) input: {rgb}, expected 3 or 4 items")
             rgb = [parse_number(item) for item in rgb]
         except (ValueError, TypeError) as e:
             raise ImageError(f"Invalid RGB input: {rgb}", e)
