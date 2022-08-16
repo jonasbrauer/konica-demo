@@ -22,3 +22,9 @@ Input/output directories (as well as other aspects of each service) can be confi
 ### Logging
 Services log both to *sys.out* and to individual *log files* (configurable). By default, logging information can be observed in
 ```.logs``` directory.
+
+#
+## Web GUI
+The system can be accessed via a simple Flask/templates web graphical interface.
+
+![image](https://user-images.githubusercontent.com/10963153/184909818-eda53c2c-647b-42d9-92f3-0512099edd49.png)
