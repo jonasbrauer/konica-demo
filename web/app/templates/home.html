@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload</title>
+</head>
+
+<style>
+body {
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    text-align: center;
+    color: #555555;
+    font-size: 1.2em;
+    padding: 30px;
+}
+.container {
+    display: flex;
+    justify-content: center;
+}
+.small {
+    font-size: 0.7em;
+    margin: 0px;
+}
+.error {
+    color: red;
+}
+.success {
+    color: green;
+}
+
+.color-square {
+    min-width: 2em;
+}
+
+</style>
+<body>
+
+<div>
+    <h1>IMAGE UPLOAD</h1>
+    <h5>UPLOAD AN IMAGE & COMPUTE ITS AVERAGE RGB VALUE</h5>
+    <form method=post enctype=multipart/form-data style="margin-bottom: 1em">
+        <input type=file name=file>
+        <input type=submit value=Upload>
+    </form>
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+        {% for category, message in messages %}
+             <p class="small {{ category }}">{{ message }}</p>
+        {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
+
+<hr>
+
+{% if computations %}
+<h4>PREVIOUS UPLOADS</h4>
+<table class="container" style="text-align: center;">
+    {% for computation in computations %}
+     <tr>
+         {% if computation.result %}
+         <td class="color-square" style="background-color: {{ computation.result }}"></td>
+         {% elif computation.error %}
+         <td class="color-square error small">FAILED</td>
+         {% else %}
+         <td class="color-square">...</td>
+         {% endif %}
+         <td><a href="/{{ computation.image_id }}" style="padding-left:1em">{{ computation.image_id }}</a></td>
+     </tr>
+    {% endfor %}
+</table>
+{% endif %}
+
+</body>
+</html>

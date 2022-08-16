@@ -11,6 +11,24 @@ services:
     networks:
       - internal
 
+  web:
+    build:
+      context: web
+      dockerfile: Dockerfile
+    environment:
+      - LOG_FILE=/var/log/web.log
+      - LOG_LEVEL=INFO
+      - BROKER_HOST=rabbitmq
+      - INPUT_EXCHANGE=processed
+      - OUTPUT_EXCHANGE=to_be_processed
+      - FLASK_ENV=development
+    volumes:
+      - .logs:/var/log/:z
+    ports:
+      - 8080:8080
+    networks:
+      - internal
+
   compute:
     container_name: compute
     build:
