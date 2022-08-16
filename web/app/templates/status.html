@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% if not computation.result %}
+    <meta http-equiv="refresh" content="1" >
+    {% endif %}
+    <title>status</title>
+</head>
+
+<style>
+body {
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    text-align: center;
+    color: #555555;
+    font-size: 1.2em;
+    padding: 30px;
+}
+.container {
+    display: flex;
+    justify-content: center;
+}
+
+.container img {
+    max-width: 50%;
+}
+
+.lds-dual-ring {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+}
+
+.lds-dual-ring:after {
+    content: " ";
+    display: block;
+    width: 48px;
+    height: 48px;
+    margin: 8px;
+    border-radius: 50%;
+    border: 6px solid #aaa;
+    border-color: #aaa transparent #aaa transparent;
+    animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+tr {
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.error {
+    color: red;
+    font-size: 0.7em;
+    margin: 0px;
+}
+
+</style>
+<body>
+
+<div>
+    <div class="container">
+        <table style="text-align: center;">
+            <tr>
+                <td><strong>Computation ID</strong></td>
+                <td>{{ computation.image_id }}</td>
+            </tr>
+            <tr style="height: 80px; outline: thin solid #aaa">
+                <td><strong>Average color</strong>
+                    {% if computation.result %}
+                    <br>{{ computation.result }}
+                    {% endif %}
+                </td>
+                {% if computation.result %}
+                <td style="background-color: {{ computation.result }};"></td>
+                {% elif computation.error %}
+                <td style="color: red; font-size: 1.2em;">FAILED</td>
+                {% else %}
+                <td class="container" style="margin-left: auto;">
+                    <span class="lds-dual-ring"></span>
+                </td>
+                {% endif %}
+            </tr>
+            {% if computation.error %}
+            <tr>
+                <td class="error" colspan="2">{{ computation.error }}</td>
+            </tr>
+            {% endif %}
+        </table>
+    </div>
+    <div style="margin-top: 1em; margin-bottom: 1em">
+        <a href="javascript:history.go(0)" style="margin-right=1em;">Refresh</a>
+        |
+        <a href="/" style="margin-left=1em;">Go back</a>
+    </div>
+    <hr>
+    <div class="container">
+        <img id="UploadedImage" src="data:;base64,{{ image_bytes }}"/>
+    </div>
+
+</div>
+
+</body>
+</html>
