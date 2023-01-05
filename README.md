@@ -1,4 +1,4 @@
-# KONICA-DEMO
+# MESSAGING-DEMO
 
 Demonstration of a simple sorting system composed of 3 microservices: *"scanner"*, *"compute"* and *"sorter"*. Services utilize a RabbitMQ instance to communicate with each other.
 
